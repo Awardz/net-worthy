@@ -1,7 +1,13 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import TIMESTAMP, Boolean, Date, ForeignKey, Numeric, create_engine, Column, Integer, String
+from pydantic import BaseModel
+
 
 Base = declarative_base()
+
+class UserCreate(BaseModel):
+    email: str
+    password: str
 
 class User(Base):
     __tablename__ = 'users'
@@ -49,5 +55,3 @@ class Transaction(Base):
 
     def __repr__(self):
         return f"<Transaction(id={self.id}, account_id={self.account_id}, amount={self.amount}, date={self.date})>"
-    
-
