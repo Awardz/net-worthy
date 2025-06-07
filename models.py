@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import TIMESTAMP, Boolean, Date, ForeignKey, Numeric, create_engine, Column, Integer, String
 from pydantic import BaseModel
+from utils import hash_password, verify_password
 
 
 Base = declarative_base()
@@ -17,6 +18,9 @@ class User(Base):
     password_hash = Column(String)
     created_at = Column(TIMESTAMP, server_default="CURRENT_TIMESTAMP")
     updated_at = Column(TIMESTAMP, server_default="CURRENT_TIMESTAMP", onupdate="CURRENT_TIMESTAMP")
+
+    def verify_password(self, password: str):
+        return verify_password(password, self.password_hash)
 
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email})>"

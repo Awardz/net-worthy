@@ -11,6 +11,11 @@ function App()
     password: '',
   });
 
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: '',
+  });
+
   const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRegisterData((prevData) => ({
@@ -48,6 +53,45 @@ function App()
     }
   };
 
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setLoginData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  
+    console.log('Login submitted');
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to login');
+      }
+
+      const data = await response.json();
+      console.log('Login successful:', data);
+      alert(`Login successful! User ID: ${data.id}`);
+    } catch (error) {
+      console.error('Error during login:', error);
+      if (error instanceof Error) {
+        alert(`Login failed: ${error.message}`);
+      } else {
+        alert('Login failed: An unknown error occurred.');
+      }
+    }
+    console.log('Login submitted');
+  };
+
       
 
 return (
@@ -72,6 +116,7 @@ return (
             <input type="password" name='password' placeholder="Password" className='border-2 border-black p-2 rounded'
             value={registerData.password}
             onChange={handleRegisterChange} />
+
             <button type="submit" className='bg-blue-500 text-white p-2 rounded'>Submit</button>
           </form>
           </div>
@@ -81,10 +126,15 @@ return (
         <div className='flex flex-col items-center justify-center gap-4 border-2 border-black p-4 rounded-lg shadow-lg'>
           <div>
           <h2>Login</h2>
-          <form className='flex flex-col gap-2'>
-            <input type="text" placeholder="Username" className='border-2 border-black p-2 rounded' />
-            <input type="email" placeholder="Email" className='border-2 border-black p-2 rounded' />
-            <input type="password" placeholder="Password" className='border-2 border-black p-2 rounded' />
+          <form className='flex flex-col gap-2' onSubmit={handleLoginSubmit}>
+            <input type="email" name="email" placeholder="Email" className='border-2 border-black p-2 rounded' 
+            value={loginData.email} 
+            onChange={handleLoginChange}/>
+
+            <input type="password" name='password' placeholder="Password" className='border-2 border-black p-2 rounded' 
+            value={loginData.password} 
+            onChange={handleLoginChange}/>
+
             <button type="submit" className='bg-blue-500 text-white p-2 rounded'>Submit</button>
           </form>
           </div>

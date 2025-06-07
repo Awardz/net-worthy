@@ -78,8 +78,13 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    
-    return {"id": new_user.id, "email": new_user.email}
+
+@app.post("/login")
+def login(user: UserCreate, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if not existing_user or not existing_user.verify_password(user.password):
+        raise HTTPException(status_code=400, detail="Invalid email or password", headers={"WWW-Authenticate": "Bearer"})
+    return {"message": "Login successful", "user_id": existing_user.id}
 
 @app.post("/create_link_token")
 def create_link_token(user_id: int, db: Session = Depends(get_db)):
