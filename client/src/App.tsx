@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 import { motion} from 'framer-motion';
 
@@ -54,7 +54,7 @@ function App()
   };
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.currentTarget;
+    const { name, value } = e.target;
     setLoginData((prevData) => ({
       ...prevData,
       [name]: value,
