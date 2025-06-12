@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import './App.css'
 import { motion} from 'framer-motion';
+import React from 'react';
+
+
 
 
 
 function App() 
 {
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+  
   const [registerData, setRegisterData] = useState({
     email: '',
     password: '',
@@ -27,7 +32,7 @@ function App()
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/register', {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +71,7 @@ function App()
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
